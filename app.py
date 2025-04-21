@@ -1,8 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template_string
 import os
 
 app = Flask(__name__)
 
+# Home page route
+@app.route("/")
+def home():
+    return render_template_string(open("index.html").read())
+
+# Credit check API route
 @app.route("/check-credit", methods=["POST"])
 def check_credit():
     data = request.get_json()
@@ -10,7 +16,7 @@ def check_credit():
     credit_score = data.get("credit_score")
     employment_status = data.get("employment_status")
 
-    # Mock scoring logic
+    # Simple mock scoring logic
     offers = []
     if credit_score >= 700:
         offers.append({"bank": "Bank A", "amount": 50000, "interest_rate": 6.5})
@@ -24,3 +30,5 @@ def check_credit():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+    
+
